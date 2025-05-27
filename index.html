@@ -8,42 +8,291 @@
     <title>Harsh Raj | Research Scholar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Application Structure Plan: 
-        Single Page Application (SPA) with a continuous scrolling layout.
-        Header: Fixed at the top, containing the scholar's name, title, and theme toggle. Includes smooth scroll navigation links.
-        Main Content Area: All sections (About, Education, Research, Publications, Contact) are presented linearly, one after another, requiring vertical scrolling to view. Each section is visually distinct with generous padding and a consistent card-based design for content blocks.
-        Footer: Standard copyright notice at the bottom.
-        User Flow: User lands at the top of the page and scrolls down to explore content. Navigation links in the header provide smooth scrolling to specific sections. LLM buttons provide on-demand explanations, expanded bios, and keyword generation. Hovering over content blocks (cards) will now visually highlight them.
-        Why this structure: This template offers a traditional web page experience where all content is accessible by scrolling. It's ideal for presenting a narrative flow or when the user is expected to consume content sequentially. The clear sectioning and smooth scroll navigation enhance usability for a longer page, making it easy to jump to areas of interest while still allowing for continuous reading. The added LLM features provide on-demand, dynamic content enrichment without cluttering the initial view. The new hover effect on cards makes interaction more intuitive and visually engaging.
-    -->
-    <!-- Visualization & Content Choices:
-        1.  Hero Information (Name, Title): Prominent text display within a fixed header with a gradient background. Goal: Inform.
-        2.  Navigation Links: Standard anchor links (HTML, Tailwind, JS for smooth scroll) in the header for jumping to sections. Goal: Navigate.
-        3.  About Me Section: Textual content for a personal introduction, presented within a distinct card, now with an LLM-powered "✨ Expand Bio" button. Goal: Inform, Engage.
-        4.  Education Section: Structured list of academic qualifications, each within its own card, arranged in a responsive grid. Goal: Inform, Organize.
-        5.  Research Interests Section: Bulleted list for areas of expertise, with LLM-powered "✨ Learn More" buttons, presented within a card. Goal: Inform, Organize, Engage.
-        6.  Publications Section: Formatted list with links for scholarly output, with LLM-powered "✨ Explain" and new "✨ Generate Keywords" buttons, each within a card. Goal: Inform, Organize, Engage.
-        7.  Contact Section: List of links with Unicode icons for communication channels, presented within a single card. Goal: Inform, Connect.
-        8.  Theme Toggle: Interactive button with Unicode icon for user preference on light/dark mode, styled to fit the new aesthetic. Goal: Enhance UX.
-        9.  Chart.js Integration: CDN included, and a .chart-container class is styled as per requirements. No charts are instantiated as the current portfolio content is primarily textual and lacks quantitative data that would benefit from visualization. Goal: Future Scalability for Data Visualization.
-    -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
             transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         }
+        
+        .dark body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        
         .nav-link {
-            @apply px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 whitespace-nowrap;
+            @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap;
         }
         .nav-link:hover {
-            @apply bg-emerald-600 text-white; /* Hover for navigation links */
+            @apply bg-emerald-600 text-white transform scale-105;
         }
+        
+        /* Enhanced modern card styling */
         .card {
-            @apply bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700; /* Added hover:bg-gray-100 and dark:hover:bg-gray-700 */
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
-        /* Required chart container styling */
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .dark .card {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(71, 85, 105, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dark .card:hover {
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Education cards with unique colors */
+        .education-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .education-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 197, 253, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .education-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 25px 70px rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        
+        .education-card:hover::before {
+            opacity: 1;
+        }
+        
+        .dark .education-card {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Research interest cards */
+        .research-item {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(196, 181, 253, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 6px 24px rgba(168, 85, 247, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .research-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(196, 181, 253, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .research-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+        
+        .research-item:hover::before {
+            opacity: 1;
+        }
+        
+        .dark .research-item {
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.2) 0%, rgba(168, 85, 247, 0.1) 100%);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+        
+        /* Publication cards */
+        .publication-item {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(252, 211, 77, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 6px 24px rgba(245, 158, 11, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .publication-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(252, 211, 77, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .publication-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(245, 158, 11, 0.2);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+        
+        .publication-item:hover::before {
+            opacity: 1;
+        }
+        
+        .dark .publication-item {
+            background: linear-gradient(135deg, rgba(154, 52, 18, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        
+        /* Contact link cards */
+        .contact-link {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(134, 239, 172, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 6px 24px rgba(34, 197, 94, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 1rem;
+            display: block;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(134, 239, 172, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .contact-link:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+        
+        .contact-link:hover::before {
+            opacity: 1;
+        }
+        
+        .dark .contact-link {
+            background: linear-gradient(135deg, rgba(6, 78, 59, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%);
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        
+        /* Main publications container */
+        .publications-container {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .publications-container:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+        }
+        
+        .dark .publications-container {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(71, 85, 105, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Button enhancements */
+        .llm-button {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .llm-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .llm-button:hover::before {
+            left: 100%;
+        }
+        
+        .llm-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Chart container styling */
         .chart-container {
             position: relative;
             width: 100%;
@@ -56,12 +305,24 @@
         @media (min-width: 768px) { 
             .chart-container { height: 350px; }
         }
+        
         .llm-output {
-            @apply mt-4 p-4 bg-amber-50 dark:bg-amber-900 rounded-lg text-sm text-gray-700 dark:text-gray-200 border border-amber-200 dark:border-amber-700; /* Distinct color for LLM output */
+            @apply mt-4 p-4 rounded-2xl text-sm;
+            background: linear-gradient(135deg, rgba(252, 211, 77, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: rgb(120, 53, 15);
+            backdrop-filter: blur(10px);
         }
+        
+        .dark .llm-output {
+            background: linear-gradient(135deg, rgba(154, 52, 18, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border-color: rgba(245, 158, 11, 0.3);
+            color: rgb(254, 215, 170);
+        }
+        
         .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #10B981; /* Tailwind emerald-500 */
+            border: 4px solid rgba(16, 185, 129, 0.2);
+            border-left-color: #10B981;
             border-radius: 50%;
             width: 24px;
             height: 24px;
@@ -70,27 +331,47 @@
             vertical-align: middle;
             margin-left: 8px;
         }
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* Section headers */
+        .section-header {
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.2));
+        }
+        
+        .dark .section-header {
+            background: linear-gradient(135deg, #34d399, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body class="text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
 
     <div id="app-container" class="flex-grow">
-        <header class="bg-gradient-to-r from-emerald-600 to-green-700 dark:from-gray-800 dark:to-gray-950 shadow-xl sticky top-0 z-50">
+        <header class="bg-gradient-to-r from-emerald-600 to-green-700 dark:from-gray-800 dark:to-gray-950 shadow-xl sticky top-0 z-50 backdrop-blur-md">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20">
                     <div class="flex items-center">
-                        <img src="https://placehold.co/50x50/D1FAE5/047857?text=HR" alt="Harsh Raj" class="h-14 w-14 rounded-full mr-4 border-3 border-white dark:border-emerald-400 shadow-md">
+                        <div class="relative">
+                            <img src="https://placehold.co/50x50/D1FAE5/047857?text=HR" alt="Harsh Raj" class="h-14 w-14 rounded-full mr-4 border-3 border-white dark:border-emerald-400 shadow-md transition-transform duration-300 hover:scale-110">
+                            <div class="absolute inset-0 h-14 w-14 rounded-full bg-gradient-to-r from-emerald-400 to-green-500 opacity-0 hover:opacity-20 transition-opacity duration-300 mr-4"></div>
+                        </div>
                         <div>
                             <h1 class="text-2xl sm:text-4xl font-bold text-white dark:text-emerald-400">Harsh Raj</h1>
                             <p class="text-sm sm:text-base text-emerald-100 dark:text-gray-400 mt-1">Research Scholar | Dept. of EEE, IIT Guwahati</p>
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <button id="theme-toggle" aria-label="Toggle theme" class="p-3 rounded-full text-white dark:text-emerald-400 hover:bg-emerald-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-emerald-600 dark:focus:ring-offset-gray-800 focus:ring-white">
+                        <button id="theme-toggle" aria-label="Toggle theme" class="p-3 rounded-full text-white dark:text-emerald-400 hover:bg-emerald-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-emerald-600 dark:focus:ring-offset-gray-800 focus:ring-white transition-all duration-300 hover:scale-110">
                             <span id="theme-icon" class="text-xl">🌙</span>
                         </button>
                     </div>
@@ -107,270 +388,95 @@
 
         <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
             <section id="about" class="pt-4">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-emerald-700 dark:text-emerald-400">About Me</h2>
+                <h2 class="text-3xl sm:text-4xl font-bold mb-8 section-header">About Me</h2>
                 <div class="space-y-6 text-base sm:text-lg leading-relaxed card">
-                    <p id="about-me-text">I am currently pursuing a Ph.D. in the Department of Electronics and Electrical Engineering at the Indian Institute of Technology Guwahati, where I have been enrolled since July 2022. My Ph.D. advisor is <a href="https://www.iitg.ac.in/manojbr/index.html" target="_blank" rel="noopener noreferrer" class="text-emerald-700 dark:text-emerald-300 hover:underline font-medium">Dr. Manoj B. R.</a></p>
-                    <button id="expand-bio-button" class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-colors duration-200 focus:outline-none" data-type="expand-bio" data-query="I am a research scholar at IIT Guwahati, specializing in Electronics and Electrical Engineering. My research focuses on next-generation wireless communication, joint sensing and communication (JSAC), intelligent reflecting surfaces, deep learning, and machine learning. I am pursuing a Ph.D. under Dr. Manoj B. R. since July 2022.">✨ Expand Bio</button>
+                    <p id="about-me-text">I am currently pursuing a Ph.D. in the Department of Electronics and Electrical Engineering at the Indian Institute of Technology Guwahati, where I have been enrolled since July 2022. My Ph.D. advisor is <a href="https://www.iitg.ac.in/manojbr/index.html" target="_blank" rel="noopener noreferrer" class="text-emerald-700 dark:text-emerald-300 hover:underline font-medium transition-colors duration-200">Dr. Manoj B. R.</a></p>
+                    <button id="expand-bio-button" class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 focus:outline-none" data-type="expand-bio" data-query="I am a research scholar at IIT Guwahati, specializing in Electronics and Electrical Engineering. My research focuses on next-generation wireless communication, joint sensing and communication (JSAC), intelligent reflecting surfaces, deep learning, and machine learning. I am pursuing a Ph.D. under Dr. Manoj B. R. since July 2022.">✨ Expand Bio</button>
                     <div id="expanded-bio-output" class="llm-output hidden"></div>
                 </div>
             </section>
 
             <section id="education" class="pt-4">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-emerald-700 dark:text-emerald-400">Education</h2>
+                <h2 class="text-3xl sm:text-4xl font-bold mb-8 section-header">Education</h2>
                 <div class="grid md:grid-cols-2 gap-8">
-                    <div class="card">
-                        <h3 class="text-xl font-semibold text-emerald-700 dark:text-emerald-300 mb-2">Ph.D. in Electronics and Electrical Engineering</h3>
-                        <p class="text-gray-700 dark:text-gray-300">Indian Institute of Technology (IIT), Guwahati</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">July 2022 – Present</p>
+                    <div class="education-card">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-semibold text-blue-700 dark:text-blue-300 mb-2">Ph.D. in Electronics and Electrical Engineering</h3>
+                            <p class="text-gray-700 dark:text-gray-300 font-medium">Indian Institute of Technology (IIT), Guwahati</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">July 2022 – Present</p>
+                        </div>
                     </div>
-                    <div class="card">
-                        <h3 class="text-xl font-semibold text-emerald-700 dark:text-emerald-300 mb-2">M.Tech. in Communication and Signal Processing</h3>
-                        <p class="text-gray-700 dark:text-gray-300">Indian Institute of Technology (IIT), Ropar</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Completed 2022</p>
+                    <div class="education-card">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-semibold text-blue-700 dark:text-blue-300 mb-2">M.Tech. in Communication and Signal Processing</h3>
+                            <p class="text-gray-700 dark:text-gray-300 font-medium">Indian Institute of Technology (IIT), Ropar</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Completed 2022</p>
+                        </div>
                     </div>
-                    <div class="card md:col-span-2">
-                        <h3 class="text-xl font-semibold text-emerald-700 dark:text-emerald-300 mb-2">B.E. in Electronics and Communication Engineering</h3>
-                        <p class="text-gray-700 dark:text-gray-300">University Institute of Technology, Burdwan</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Completed 2019</p>
+                    <div class="education-card md:col-span-2">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-semibold text-blue-700 dark:text-blue-300 mb-2">B.E. in Electronics and Communication Engineering</h3>
+                            <p class="text-gray-700 dark:text-gray-300 font-medium">University Institute of Technology, Burdwan</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Completed 2019</p>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <section id="research" class="pt-4">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-emerald-700 dark:text-emerald-400">Research Interests</h2>
-                <div class="card">
-                    <ul class="list-disc list-inside space-y-4 text-base sm:text-lg text-gray-700 dark:text-gray-300">
-                        <li class="flex flex-wrap items-center justify-between gap-2">
-                            <span>Next-generation wireless communication</span>
-                            <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-colors duration-200 focus:outline-none" data-type="research" data-query="Next-generation wireless communication">✨ Learn More</button>
-                        </li>
-                        <li class="flex flex-wrap items-center justify-between gap-2">
-                            <span>Joint sensing and communication (JSAC)</span>
-                            <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-colors duration-200 focus:outline-none" data-type="research" data-query="Joint sensing and communication (JSAC)">✨ Learn More</button>
-                        </li>
-                        <li class="flex flex-wrap items-center justify-between gap-2">
-                            <span>Intelligent reflecting surface</span>
-                            <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-colors duration-200 focus:outline-none" data-type="research" data-query="Intelligent reflecting surface">✨ Learn More</button>
-                        </li>
-                        <li class="flex flex-wrap items-center justify-between gap-2">
-                            <span>Deep learning and machine learning</span>
-                            <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-colors duration-200 focus:outline-none" data-type="research" data-query="Deep learning and machine learning">✨ Learn More</button>
-                        </li>
-                    </ul>
+                <h2 class="text-3xl sm:text-4xl font-bold mb-8 section-header">Research Interests</h2>
+                <div class="space-y-4">
+                    <div class="research-item">
+                        <div class="relative z-10 flex flex-wrap items-center justify-between gap-4">
+                            <span class="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium">Next-generation wireless communication</span>
+                            <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-all duration-300 focus:outline-none" data-type="research" data-query="Next-generation wireless communication">✨ Learn More</button>
+                        </div>
+                    </div>
+                    <div class="research-item">
+                        <div class="relative z-10 flex flex-wrap items-center justify-between gap-4">
+                            <span class="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium">Joint sensing and communication (JSAC)</span>
+                            <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-all duration-300 focus:outline-none" data-type="research" data-query="Joint sensing and communication (JSAC)">✨ Learn More</button>
+                        </div>
+                    </div>
+                    <div class="research-item">
+                        <div class="relative z-10 flex flex-wrap items-center justify-between gap-4">
+                            <span class="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium">Intelligent reflecting surface</span>
+                            <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-all duration-300 focus:outline-none" data-type="research" data-query="Intelligent reflecting surface">✨ Learn More</button>
+                        </div>
+                    </div>
+                    <div class="research-item">
+                        <div class="relative z-10 flex flex-wrap items-center justify-between gap-4">
+                            <span class="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium">Deep learning and machine learning</span>
+                            <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-all duration-300 focus:outline-none" data-type="research" data-query="Deep learning and machine learning">✨ Learn More</button>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <section id="publications" class="pt-4">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-emerald-700 dark:text-emerald-400">Publications</h2>
-                <div class="card">
-                    <h3 class="text-2xl font-semibold text-emerald-700 dark:text-emerald-300 mb-4">Conferences</h3>
-                    <ul class="space-y-6 list-disc list-inside text-gray-700 dark:text-gray-300">
-                        <li class="flex flex-col sm:flex-row sm:items-start sm:justify-between">
-                            <div class="flex-grow pr-4">
-                                <strong>H. Raj</strong> and B. R. Manoj, "<a href="https://ieeexplore.ieee.org/abstract/document/10982964" target="_blank" rel="noopener noreferrer" class="text-emerald-700 dark:text-emerald-300 hover:underline font-medium">Cascaded channel statistics and target detection analysis for IRS-assisted ISAC employing NOMA</a>," accepted for publication in National Conference on Communications (NCC), IIT Delhi, India, Mar. 6–9, 2025.
+                <h2 class="text-3xl sm:text-4xl font-bold mb-8 section-header">Publications</h2>
+                <div class="publications-container">
+                    <h3 class="text-2xl font-semibold text-emerald-700 dark:text-emerald-300 mb-6">Conferences</h3>
+                    <div class="space-y-6">
+                        <div class="publication-item">
+                            <div class="relative z-10">
+                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                                    <div class="flex-grow">
+                                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed"><strong>H. Raj</strong> and B. R. Manoj, "<a href="https://ieeexplore.ieee.org/abstract/document/10982964" target="_blank" rel="noopener noreferrer" class="text-emerald-700 dark:text-emerald-300 hover:underline font-medium transition-colors duration-200">Cascaded channel statistics and target detection analysis for IRS-assisted ISAC employing NOMA</a>," accepted for publication in National Conference on Communications (NCC), IIT Delhi, India, Mar. 6–9, 2025.</p>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-all duration-300 focus:outline-none" data-type="publication" data-title="Cascaded channel statistics and target detection analysis for IRS-assisted ISAC employing NOMA" data-context="This paper analyzes cascaded channel statistics and target detection for IRS-assisted Integrated Sensing and Communication (ISAC) systems using Non-Orthogonal Multiple Access (NOMA).">✨ Explain</button>
+                                        <button class="llm-button bg-gray-500 text-white hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 font-semibold px-4 py-2 rounded-full shadow-md transition-all duration-300 focus:outline-none" data-type="keywords" data-query="Cascaded channel statistics, target detection, IRS-assisted ISAC, NOMA">✨ Keywords</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex flex-col items-start sm:items-end gap-2 mt-2 sm:mt-0 sm:ml-4">
-                                <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-colors duration-200 focus:outline-none" data-type="publication" data-title="Cascaded channel statistics and target detection analysis for IRS-assisted ISAC employing NOMA" data-context="This paper analyzes cascaded channel statistics and target detection for IRS-assisted Integrated Sensing and Communication (ISAC) systems using Non-Orthogonal Multiple Access (NOMA).">✨ Explain</button>
-                                <button class="llm-button bg-gray-500 text-white hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 font-semibold px-4 py-2 rounded-full shadow-md transition-colors duration-200 focus:outline-none" data-type="keywords" data-query="Cascaded channel statistics, target detection, IRS-assisted ISAC, NOMA">✨ Keywords</button>
-                            </div>
-                        </li>
-                        <li class="flex flex-col sm:flex-row sm:items-start sm:justify-between">
-                            <div class="flex-grow pr-4">
-                                <strong>H. Raj</strong>, U. Singh, and B. R. Manoj, "<a href="https://ieeexplore.ieee.org/document/10683164" target="_blank" rel="noopener noreferrer" class="text-emerald-700 dark:text-emerald-300 hover:underline font-medium">On the performance of IRS-assisted SSK and RPM over Rician fading channels</a>," in Proc. IEEE 99th Vehicular Technology Conference (VTC-Spring), Singapore, Jun. 24–27, 2024.
-                            </div>
-                            <div class="flex flex-col items-start sm:items-end gap-2 mt-2 sm:mt-0 sm:ml-4">
-                                <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-colors duration-200 focus:outline-none" data-type="publication" data-title="On the performance of IRS-assisted SSK and RPM over Rician fading channels" data-context="This paper investigates the performance of Intelligent Reflecting Surface (IRS)-assisted Spatial Modulation techniques, specifically Space Shift Keying (SSK) and Receive Power Modulation (RPM), in Rician fading environments.">✨ Explain</button>
-                                <button class="llm-button bg-gray-500 text-white hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 font-semibold px-4 py-2 rounded-full shadow-md transition-colors duration-200 focus:outline-none" data-type="keywords" data-query="IRS-assisted, SSK, RPM, Rician fading, Spatial Modulation">✨ Keywords</button>
-                            </div>
-                        </li>
-                    </ul>
-                    <h3 class="text-2xl font-semibold text-emerald-700 dark:text-emerald-300 mt-8 mb-4">Journals</h3>
-                    <ul class="space-y-2 list-disc list-inside text-gray-700 dark:text-gray-300">
-                        <li>No journal publications listed yet.</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section id="contact" class="pt-4">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-emerald-700 dark:text-emerald-400">Contact</h2>
-                <div class="card">
-                    <div class="space-y-4">
-                        <a href="mailto:h.raj@iitg.ac.in" class="flex items-center space-x-4 text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200 transition-colors group">
-                            <span class="text-2xl group-hover:scale-110 transition-transform">📧</span>
-                            <span class="text-base sm:text-lg font-medium">h.raj@iitg.ac.in</span>
-                        </a>
-                        <a href="https://github.com/Harshra1-ultra" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-4 text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200 transition-colors group">
-                            <span class="text-2xl group-hover:scale-110 transition-transform">💻</span>
-                            <span class="text-base sm:text-lg font-medium">GitHub: Harshra1-ultra</span>
-                        </a>
-                        <a href="https://www.iitg.ac.in/manojbr/research-group.html" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-4 text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200 transition-colors group">
-                            <span class="text-2xl group-hover:scale-110 transition-transform">🔬</span>
-                            <span class="text-base sm:text-lg font-medium">Research Group</span>
-                        </a>
-                        <a href="https://sites.google.com/view/harsh-portfolio-iitropar-spcom/home" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-4 text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200 transition-colors group">
-                            <span class="text-2xl group-hover:scale-110 transition-transform">🌐</span>
-                            <span class="text-base sm:text-lg font-medium">Google Site Portfolio</span>
-                        </a>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <footer class="bg-gray-900 dark:bg-gray-950 border-t border-gray-800 dark:border-gray-800 mt-auto">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-gray-300 dark:text-gray-400">
-            &copy; <span id="currentYear"></span> Harsh Raj. All rights reserved.
-        </div>
-    </footer>
-    
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7632782218371378"
-     crossorigin="anonymous"></script>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-7632782218371378"
-         data-ad-slot="2658505239"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.getElementById('theme-toggle');
-            const themeIcon = document.getElementById('theme-icon');
-            const htmlElement = document.documentElement;
-
-            const navLinks = document.querySelectorAll('.nav-link');
-            const llmButtons = document.querySelectorAll('.llm-button');
-
-            const currentYearSpan = document.getElementById('currentYear');
-            if (currentYearSpan) {
-                currentYearSpan.textContent = new Date().getFullYear();
-            }
-
-            function applyTheme(theme) {
-                if (theme === 'dark') {
-                    htmlElement.classList.add('dark');
-                    themeIcon.textContent = '☀️'; 
-                } else {
-                    htmlElement.classList.remove('dark');
-                    themeIcon.textContent = '🌙';
-                }
-            }
-            
-            let preferredTheme = localStorage.getItem('theme');
-            if (!preferredTheme) {
-                preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            }
-            applyTheme(preferredTheme);
-
-            themeToggle.addEventListener('click', () => {
-                const newTheme = htmlElement.classList.contains('dark') ? 'light' : 'dark';
-                localStorage.setItem('theme', newTheme);
-                applyTheme(newTheme);
-            });
-
-            // Smooth scrolling for navigation links
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = e.target.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - document.querySelector('header').offsetHeight, // Adjust for fixed header height
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-
-            // LLM Integration
-            async function callGeminiAPI(prompt, outputElement) {
-                outputElement.innerHTML = '<div class="loading-spinner"></div> Loading...';
-                outputElement.classList.remove('hidden'); // Show the output area
-                const apiKey = ""; 
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                
-                let chatHistory = [];
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                const payload = { contents: chatHistory };
-
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    const result = await response.json();
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        outputElement.innerHTML = text;
-                    } else {
-                        outputElement.innerHTML = 'Error: Could not generate response. Please try again.';
-                    }
-                } catch (error) {
-                    console.error('Error calling Gemini API:', error);
-                    outputElement.innerHTML = 'Error: Failed to connect to the API. Please check your network connection.';
-                }
-            }
-
-            llmButtons.forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    const type = e.target.dataset.type;
-                    let prompt = '';
-                    let outputElement;
-
-                    if (type === 'publication') {
-                        const title = e.target.dataset.title;
-                        const context = e.target.dataset.context;
-                        prompt = `Explain the research paper titled '${title}' in simple terms, suitable for a non-expert audience. Focus on its main contribution and significance based on this context: '${context}'`;
-                        
-                        let outputDiv = e.target.parentElement.parentElement.querySelector('.llm-output.publication-explain'); // Find the specific output div
-                        if (!outputDiv) {
-                            outputDiv = document.createElement('div');
-                            outputDiv.classList.add('llm-output', 'publication-explain');
-                            e.target.parentElement.parentElement.appendChild(outputDiv);
-                        }
-                        outputElement = outputDiv;
-
-                    } else if (type === 'research') {
-                        const query = e.target.dataset.query;
-                        prompt = `Provide a concise explanation of '${query}' and its current significance in the field of wireless communication and machine learning research.`;
-                        
-                        let outputDiv = e.target.parentElement.querySelector('.llm-output.research-explain');
-                        if (!outputDiv) {
-                            outputDiv = document.createElement('div');
-                            outputDiv.classList.add('llm-output', 'research-explain');
-                            e.target.parentElement.appendChild(outputDiv);
-                        }
-                        outputElement = outputDiv;
-                    } else if (type === 'expand-bio') {
-                        const bioText = e.target.dataset.query;
-                        prompt = `Expand on the following short biography to make it more detailed and engaging, focusing on academic journey, research passion, and future aspirations: "${bioText}"`;
-                        outputElement = document.getElementById('expanded-bio-output');
-                    } else if (type === 'keywords') {
-                        const textToKeyword = e.target.dataset.query;
-                        prompt = `Generate a comma-separated list of 5-7 relevant keywords for the following text, suitable for academic indexing: "${textToKeyword}"`;
-                        
-                        let outputDiv = e.target.parentElement.parentElement.querySelector('.llm-output.keywords-output');
-                        if (!outputDiv) {
-                            outputDiv = document.createElement('div');
-                            outputDiv.classList.add('llm-output', 'keywords-output');
-                            e.target.parentElement.parentElement.appendChild(outputDiv);
-                        }
-                        outputElement = outputDiv;
-                    }
-
-                    if (prompt && outputElement) {
-                        await callGeminiAPI(prompt, outputElement);
-                    }
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+                        </div>
+                        <div class="publication-item">
+                            <div class="relative z-10">
+                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                                    <div class="flex-grow">
+                                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed"><strong>H. Raj</strong>, U. Singh, and B. R. Manoj, "<a href="https://ieeexplore.ieee.org/document/10683164" target="_blank" rel="noopener noreferrer" class="text-emerald-700 dark:text-emerald-300 hover:underline font-medium transition-colors duration-200">On the performance of IRS-assisted SSK and RPM over Rician fading channels</a>," in Proc. IEEE 99th Vehicular Technology Conference (VTC-Spring), Singapore, Jun. 24–27, 2024.</p>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <button class="llm-button bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 font-semibold px-4 py-2 rounded-full shadow-md transition-all duration-300 focus:outline-none" data-type="publication" data-title="On the performance of IRS-assisted SSK and RPM over Rician fading channels" data-context="This paper investigates the performance of Intelligent Reflecting Surface (IRS)-assisted Spatial Modulation techniques, specifically Space Shift Keying (SSK) and Receive Power Modulation (RPM), in Rician fading environments.">✨ Explain</button>
+                                        <button class="llm-button bg-gray-500 text-white hover:bg-gray-600 dark:bg
